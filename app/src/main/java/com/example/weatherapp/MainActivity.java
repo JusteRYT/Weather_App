@@ -1,7 +1,5 @@
 package com.example.weatherapp;
 
-import static java.text.DateFormat.getTimeInstance;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.AsyncTask;
@@ -25,8 +23,6 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String WeatherUrl = "https://api.openweathermap.org/data/2.5/weather?q=%s&appid=8bcfde1214fc4399ce708d369fc9ae3a&lang=ru&units=metric";
-
     private EditText editTextCity;
     private TextView textViewWeather;
     private TextView Time;
@@ -45,14 +41,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void SetTime (){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Date date = new Date();
-                    Time.setText(DateFormat.getTimeInstance().format(date));
-                } catch (Exception e){}
-            }
+        runOnUiThread(() -> {
+            try {
+                Date date = new Date();
+                Time.setText(DateFormat.getTimeInstance().format(date));
+            } catch (Exception e){}
         });
     }
     class CountDownRunner implements Runnable{
@@ -73,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         String city = editTextCity.getText().toString().trim();
         if (!city.isEmpty()){
             DownloadWeatherTask task = new DownloadWeatherTask();
-            String url = String.format(WeatherUrl,city);
+            String weatherUrl = "https://api.openweathermap.org/data/2.5/weather?q=%s&appid=8bcfde1214fc4399ce708d369fc9ae3a&lang=ru&units=metric";
+            String url = String.format(weatherUrl,city);
             task.execute(url);
         }
     }
@@ -81,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private class DownloadWeatherTask extends AsyncTask <String, Void , String>{
         @Override
         protected String doInBackground(String... strings) {
-            URL url = null;
+            URL url;
             HttpURLConnection urlConnection = null;
             StringBuilder result = new StringBuilder();
             try {
@@ -116,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONObject jsonObject = new JSONObject(s);
                 String city = jsonObject.getString("name");
-                String temp = null;
+                String temp;
                 temp = jsonObject.getJSONObject("main").getString("temp");
                 String temp1 = temp.substring(0, temp.indexOf("."));
                 String description = jsonObject.getJSONArray("weather").getJSONObject(0).getString("description");
