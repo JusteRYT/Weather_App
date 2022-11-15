@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Weather App</string>
+    <string name="todo">TODO</string>
+    <string name="ChangeCity">Введите город или индекс</string>
+    <string name="ShowWeatherButton">Показать погоду</string>
+    <string name="Time">%s:%s:%s</string>
+</resources>
